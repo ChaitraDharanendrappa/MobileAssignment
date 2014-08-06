@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>5EB30166-9E76-479E-9F23-C82394984386</string>
+	<key>IDESourceControlProjectName</key>
+	<string>MobileAssignment</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>B61F9A52-D615-4387-8E8A-D6BF7A3B2150</key>
+		<string>https://github.com/ChaitraDharanendrappa/MobileAssignment</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>MobileAssignment.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>B61F9A52-D615-4387-8E8A-D6BF7A3B2150</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/ChaitraDharanendrappa/MobileAssignment</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>B61F9A52-D615-4387-8E8A-D6BF7A3B2150</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>B61F9A52-D615-4387-8E8A-D6BF7A3B2150</string>
+			<key>IDESourceControlWCCName</key>
+			<string>MobileAssignment</string>
+		</dict>
+	</array>
+</dict>
+</plist>

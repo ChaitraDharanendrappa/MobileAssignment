@@ -21,9 +21,22 @@
 @synthesize lastSubmittedTime;
 
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(submit:) name:@"didSubmitData" object:nil];
+        
+    }
+    return self;
+}
+
+
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     
     NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
     
@@ -41,7 +54,7 @@
     
     name.delegate=self;
     
-    lastSubmittedTime.text = [NSString stringWithFormat:@"%d sec ago",([standardDefaults integerForKey:@"kLastAccessedTime"]/60)%60];
+    lastSubmittedTime.text = [NSString stringWithFormat:@"%d sec ago",[standardDefaults integerForKey:@"kLastAccessedTime"]];
     
 }
 
