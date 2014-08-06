@@ -26,7 +26,7 @@
     [super viewDidLoad];
     
     NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
-
+    
     //retrieving name and location on load
     
     if([standardDefaults stringForKey:@"kUserName"]==nil)
@@ -36,12 +36,12 @@
     else
     {
         name.text = [standardDefaults stringForKey:@"kUserName"];
-
+        
     }
     
     name.delegate=self;
     
-    lastSubmittedTime.text = [NSString stringWithFormat:@"%d sec ago",[standardDefaults integerForKey:@"kLastAccessedTime"]];
+    lastSubmittedTime.text = [NSString stringWithFormat:@"%d sec ago",([standardDefaults integerForKey:@"kLastAccessedTime"]/60)%60];
     
 }
 
@@ -107,18 +107,26 @@
 
 -(IBAction)submit:(id)sender
 {
-   
-   // curl -X POST -u USERNAME:PASSWORD "http://gentle-tor-1851.herokuapp.com/events" -d "data=NAME is now at LATITUDE/LONGITUDE"
+    
     
     NSString *info  = [NSString stringWithFormat:@"%@ is now at %@/%@", name.text, latitude,longitude];
     
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    NSDictionary *parameters = @{@"USERNAME":@"chaitra", @"PASSWORD":@"lumbergh21",@"data": info};
-    [manager POST:@"http://gentle-tor-1851.herokuapp.com/events" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"JSON: %@", responseObject);
+    NSString *URLString = @"http://gentle-tor-1851.herokuapp.com/events";
+    NSDictionary *parameters = @{@"data": info};
+    
+    NSURLRequest *request = [[AFJSONRequestSerializer serializer] requestWithMethod:@"POST" URLString:URLString parameters:parameters error:nil];
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+    operation.credential = [NSURLCredential credentialWithUser:@"chaitra" password:@"lumbergh21" persistence:NSURLCredentialPersistencePermanent];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"Status code is %d", operation.response.statusCode);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
     }];
+    
+    [[NSOperationQueue mainQueue] addOperation:operation];
     
     [self showSubmitTime];
     
@@ -170,21 +178,21 @@
     if(submitCount >= 2) {
         
         
-            tempTime1 = currentSecond + tempTime;
+        tempTime1 = currentSecond + tempTime;
         
-            if(tempTime1 > 60)
-            {
-                lastSubmittedTime.text = [NSString stringWithFormat:@"%d min ago",((tempTime1 / 60) % 60)];
-            }
-            else{
-                
-                lastSubmittedTime.text = [NSString stringWithFormat:@"%d sec ago",tempTime1];
-            }
+        if(tempTime1 > 60)
+        {
+            lastSubmittedTime.text = [NSString stringWithFormat:@"%d min ago",((tempTime1 / 60) % 60)];
+        }
+        else{
+            
+            lastSubmittedTime.text = [NSString stringWithFormat:@"%d sec ago",tempTime1];
+        }
         
     }
     
     [defaults setInteger:tempTime1 forKey:@"kLastAccessedTime"];
- 
+    
 }
 
 
