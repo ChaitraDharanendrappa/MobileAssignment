@@ -12,6 +12,8 @@
 
 @interface ViewController ()
 
+-(void)showSubmitTime;
+
 @end
 
 @implementation ViewController
@@ -24,7 +26,7 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super initWithCoder:aDecoder]) {
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(submit:) name:@"didSubmitData" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(submit:) name:@"DidSubmitDataNotification" object:nil];
         
     }
     return self;
@@ -37,10 +39,9 @@
 {
     [super viewDidLoad];
     
-    
     NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
     
-    //retrieving name and location on load
+    /* retrieving name and location on load */
     
     if([standardDefaults stringForKey:@"kUserName"]==nil)
     {
@@ -54,6 +55,8 @@
     
     name.delegate=self;
     
+    /* rerieve last submitted time on load */
+    
     lastSubmittedTime.text = [NSString stringWithFormat:@"%d sec ago",[standardDefaults integerForKey:@"kLastAccessedTime"]];
     
 }
@@ -63,7 +66,7 @@
 {
     [super viewWillAppear:animated];
     
-    // initializing location manager
+    /* initializing location manager */
     
     locationManager = [[CLLocationManager alloc] init];
     
@@ -121,7 +124,6 @@
 -(IBAction)submit:(id)sender
 {
     
-    
     NSString *info  = [NSString stringWithFormat:@"%@ is now at %@/%@", name.text, latitude,longitude];
     
     NSString *URLString = @"http://gentle-tor-1851.herokuapp.com/events";
@@ -143,7 +145,7 @@
     
     [self showSubmitTime];
     
-    // saving user name on submit
+    /* saving user name on submit */
     
     [[NSUserDefaults standardUserDefaults] setObject:name.text forKey:@"kUserName"];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -158,7 +160,7 @@
     
     tempTime = [[NSUserDefaults standardUserDefaults] integerForKey:@"kLastAccessedTime"];
     
-    //Set up the properties for the integer and default.
+    /* Set up the properties for the integer and default */
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     submitCount = [defaults integerForKey:@"hasSubmitted"] + 1;
@@ -167,45 +169,34 @@
     
     NSLog(@"This application has been submitted %d amount of times", submitCount);
     
-    // getting current time in hours minutes and seconds
+    /* getting current time in seconds */
     
     NSDate *today = [NSDate date];
     NSCalendar *gregorian = [[NSCalendar alloc]initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents *components =
     [gregorian components:(NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit) fromDate:today];
     
-    NSInteger hour = [components hour];
-    NSInteger minute = [components minute];
     NSInteger currentSecond = [components second];
     
-    NSLog(@"time is %d:%d:%d", hour,minute,currentSecond);
+    tempTime1 = currentSecond + tempTime;
     
     if(submitCount == 1)
     {
-        
-        tempTime1 = currentSecond + tempTime;
         lastSubmittedTime.text = [NSString stringWithFormat:@"%d sec ago", tempTime1];
-        
     }
     
     if(submitCount >= 2) {
-        
-        
-        tempTime1 = currentSecond + tempTime;
         
         if(tempTime1 > 60)
         {
             lastSubmittedTime.text = [NSString stringWithFormat:@"%d min ago",((tempTime1 / 60) % 60)];
         }
         else{
-            
             lastSubmittedTime.text = [NSString stringWithFormat:@"%d sec ago",tempTime1];
         }
         
     }
-    
     [defaults setInteger:tempTime1 forKey:@"kLastAccessedTime"];
-    
 }
 
 
@@ -225,6 +216,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+-(void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 
 @end

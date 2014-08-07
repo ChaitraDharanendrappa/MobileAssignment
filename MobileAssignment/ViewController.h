@@ -13,8 +13,6 @@
 {
     CLLocationManager *locationManager;
     NSString *longitude, *latitude;
-    
-    
 }
 
 @property (weak, nonatomic) IBOutlet UITextField *name;   // attribute to display user name
