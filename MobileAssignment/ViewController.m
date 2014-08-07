@@ -11,6 +11,9 @@
 
 
 @interface ViewController ()
+{
+    NSString *longitude, *latitude;
+}
 
 -(void)showSubmitTime;
 
@@ -50,7 +53,6 @@
     else
     {
         name.text = [standardDefaults stringForKey:@"kUserName"];
-        
     }
     
     name.delegate=self;
@@ -78,46 +80,6 @@
 }
 
 
-
-#pragma - mark CLLocationManager Delegate Methods
-
-- (void)locationManager:(CLLocationManager *)manager
-	didUpdateToLocation:(CLLocation *)newLocation
-		   fromLocation:(CLLocation *)oldLocation
-{
-    
-    NSLog(@"didUpdateToLocation: %@", newLocation);
-    CLLocation *currentLocation = newLocation;
-    
-    if (currentLocation != nil) {
-        
-        longitude = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude];
-        latitude = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude];
-        
-        location.text = [NSString stringWithFormat:@"%@, %@",latitude,longitude];
-        
-        NSLog(@"location is %@", location.text);
-        
-        [locationManager stopUpdatingLocation];
-        [locationManager setDelegate:nil];
-        
-    }
-    
-}
-
-
-- (void)locationManager:(CLLocationManager *)manager
-       didFailWithError:(NSError *)error
-{
-    NSLog(@"didFailWithError: %@", error);
-    
-    location.text = @"Error";
-    
-    UIAlertView *errorAlert = [[UIAlertView alloc]
-                               initWithTitle:@"Error" message:@"Failed to Get Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [errorAlert show];
-    
-}
 
 
 
@@ -200,16 +162,6 @@
 }
 
 
-#pragma - mark TextField Delegate Method
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    [name resignFirstResponder];
-    return YES;
-}
-
-
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -220,6 +172,63 @@
 -(void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+
+
+#pragma - mark CLLocationManager Delegate Methods
+
+- (void)locationManager:(CLLocationManager *)manager
+	didUpdateToLocation:(CLLocation *)newLocation
+		   fromLocation:(CLLocation *)oldLocation
+{
+    
+    NSLog(@"didUpdateToLocation: %@", newLocation);
+    CLLocation *currentLocation = newLocation;
+    
+    if (currentLocation != nil) {
+        
+        longitude = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude];
+        latitude = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude];
+        
+        location.text = [NSString stringWithFormat:@"%@, %@",latitude,longitude];
+        
+        NSLog(@"location is %@", location.text);
+        
+        [locationManager stopUpdatingLocation];
+        [locationManager setDelegate:nil];
+        
+    }
+    
+}
+
+
+- (void)locationManager:(CLLocationManager *)manager
+       didFailWithError:(NSError *)error
+{
+    NSLog(@"didFailWithError: %@", error);
+    
+    location.text = @"Error";
+    
+    UIAlertView *errorAlert = [[UIAlertView alloc]
+                               initWithTitle:@"Error" message:@"Failed to Get Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [errorAlert show];
+    
+}
+
+
+
+
+#pragma - mark TextField Delegate Method
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [name resignFirstResponder];
+    return YES;
+}
+
+
+
+
 
 
 @end

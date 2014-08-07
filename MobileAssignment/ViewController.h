@@ -12,12 +12,12 @@
 @interface ViewController : UIViewController<CLLocationManagerDelegate, UITextFieldDelegate>
 {
     CLLocationManager *locationManager;
-    NSString *longitude, *latitude;
+    
 }
 
-@property (weak, nonatomic) IBOutlet UITextField *name;   // attribute to display user name
-@property (weak, nonatomic) IBOutlet UILabel *location;     // attribute to display location coordinates
-@property (weak, nonatomic) IBOutlet UILabel *lastSubmittedTime;  // attribute to display last submitted time
+@property (weak, nonatomic) IBOutlet UITextField *name;
+@property (weak, nonatomic) IBOutlet UILabel *location;
+@property (weak, nonatomic) IBOutlet UILabel *lastSubmittedTime;
 
 
 -(IBAction)submit:(id)sender;
