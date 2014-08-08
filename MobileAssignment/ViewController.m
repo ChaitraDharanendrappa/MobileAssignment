@@ -98,7 +98,7 @@
     operation.responseSerializer = [AFJSONResponseSerializer serializer];
     
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"Status code is %d", operation.response.statusCode);
+        NSLog(@"Status code is %ld", (long)operation.response.statusCode);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
     }];

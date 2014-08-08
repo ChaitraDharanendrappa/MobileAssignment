@@ -258,6 +258,13 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "___FULLUSERNAME___";
 				TargetAttributes = {
+					0C787B551990A541004F77BE = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
 					0C787B761990A541004F77BE = {
 						TestTargetID = 0C787B551990A541004F77BE;
 					};
@@ -524,6 +531,7 @@
 				0C787B8A1990A541004F77BE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0C787B8B1990A541004F77BE /* Build configuration list for PBXNativeTarget "MobileAssignmentTests" */ = {
 			isa = XCConfigurationList;
@@ -532,6 +540,7 @@
 				0C787B8D1990A541004F77BE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
