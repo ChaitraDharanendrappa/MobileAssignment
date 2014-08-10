@@ -13,9 +13,12 @@
 @interface ViewController ()
 {
     NSString *longitude, *latitude;
+    
+    double timeStamp;
+    
+    NSTimer *timer;
+    
 }
-
--(void)showSubmitTime;
 
 @end
 
@@ -57,9 +60,16 @@
     
     name.delegate=self;
     
-    /* rerieve last submitted time on load */
+    [self resetTime];
     
-    lastSubmittedTime.text = [NSString stringWithFormat:@"%d sec ago",[standardDefaults integerForKey:@"kLastAccessedTime"]];
+
+    timer = [NSTimer scheduledTimerWithTimeInterval:1
+                                             target:self
+                                           selector:@selector(timerController)
+                                           userInfo:nil
+                                            repeats:YES];
+    
+
     
 }
 
@@ -85,7 +95,8 @@
 
 -(IBAction)submit:(id)sender
 {
-    
+    [self resetTime];
+   
     NSString *info  = [NSString stringWithFormat:@"%@ is now at %@/%@", name.text, latitude,longitude];
     
     NSString *URLString = @"http://gentle-tor-1851.herokuapp.com/events";
@@ -105,60 +116,35 @@
     
     [[NSOperationQueue mainQueue] addOperation:operation];
     
-    [self showSubmitTime];
-    
-    /* saving user name on submit */
-    
     [[NSUserDefaults standardUserDefaults] setObject:name.text forKey:@"kUserName"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
+    
+ }
+
+
+
+-(NSTimeInterval)getCurrentTime
+{
+    
+    NSTimeInterval currentSecond = [[NSDate date]timeIntervalSince1970];
+    
+    return currentSecond;
 }
 
 
--(void)showSubmitTime
+-(void)resetTime
 {
     
-    int submitCount, tempTime, tempTime1=0;
+    timeStamp = [self getCurrentTime];
+}
+
+
+- (void)timerController {
     
-    tempTime = [[NSUserDefaults standardUserDefaults] integerForKey:@"kLastAccessedTime"];
+    double tempTime = [self getCurrentTime] - timeStamp;
     
-    /* Set up the properties for the integer and default */
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    submitCount = [defaults integerForKey:@"hasSubmitted"] + 1;
-    [defaults setInteger:submitCount forKey:@"hasSubmitted"];
-    [defaults synchronize];
-    
-    NSLog(@"This application has been submitted %d amount of times", submitCount);
-    
-    /* getting current time in seconds */
-    
-    NSDate *today = [NSDate date];
-    NSCalendar *gregorian = [[NSCalendar alloc]initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *components =
-    [gregorian components:(NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit) fromDate:today];
-    
-    NSInteger currentSecond = [components second];
-    
-    tempTime1 = currentSecond + tempTime;
-    
-    if(submitCount == 1)
-    {
-        lastSubmittedTime.text = [NSString stringWithFormat:@"%d sec ago", tempTime1];
-    }
-    
-    if(submitCount >= 2) {
-        
-        if(tempTime1 > 60)
-        {
-            lastSubmittedTime.text = [NSString stringWithFormat:@"%d min ago",((tempTime1 / 60) % 60)];
-        }
-        else{
-            lastSubmittedTime.text = [NSString stringWithFormat:@"%d sec ago",tempTime1];
-        }
-        
-    }
-    [defaults setInteger:tempTime1 forKey:@"kLastAccessedTime"];
+    lastSubmittedTime.text = [NSString stringWithFormat:@"%.0f sec ago", tempTime];
 }
 
 
@@ -170,7 +156,9 @@
 
 
 -(void)dealloc {
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [timer invalidate];
 }
 
 
