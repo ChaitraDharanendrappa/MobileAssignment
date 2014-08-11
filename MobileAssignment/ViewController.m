@@ -99,14 +99,17 @@
    
     NSString *info  = [NSString stringWithFormat:@"%@ is now at %@/%@", name.text, latitude,longitude];
     
-    NSString *URLString = @"http://gentle-tor-1851.herokuapp.com/events";
+   // NSString *URLString = @"http://gentle-tor-1851.herokuapp.com/events";
+   
     NSDictionary *parameters = @{@"data": info};
     
-    NSURLRequest *request = [[AFJSONRequestSerializer serializer] requestWithMethod:@"POST" URLString:URLString parameters:parameters error:nil];
+   /* NSURLRequest *request = [[AFJSONRequestSerializer serializer] requestWithMethod:@"POST" URLString:URLString parameters:parameters error:nil];
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     
     operation.credential = [NSURLCredential credentialWithUser:@"chaitra" password:@"lumbergh21" persistence:NSURLCredentialPersistencePermanent];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+   // operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    operation.responseStringEncoding = @"application/x-www-form-urlencoded";
     
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"Status code is %ld", (long)operation.response.statusCode);
@@ -118,6 +121,19 @@
     
     [[NSUserDefaults standardUserDefaults] setObject:name.text forKey:@"kUserName"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    */
+    
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://gentle-tor-1851.herokuapp.com/events"]]];
+    
+    operation.credential = [NSURLCredential credentialWithUser:@"chaitra" password:@"lumbergh21" persistence:NSURLCredentialPersistencePermanent];
+
+    [manager POST:@"http://gentle-tor-1851.herokuapp.com/events" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"Status code is %ld", (long)operation.response.statusCode);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
     
     
  }
